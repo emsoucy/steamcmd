@@ -23,13 +23,15 @@ mkdir $MOUNTPOINT/home/steam
 echo 'steam:x:1000:1000::/home/steam:/bin/bash' >> $MOUNTPOINT/etc/passwd
 echo 'steam:x:1000:' >> $MOUNTPOINT/etc/group
 echo "PATH=\$PATH:$STEAM" >> $MOUNTPOINT/home/steam/.bashrc
+buildah config --user steam:steam $CONTAINER
+buildah config --workingdir '/home/steam' $CONTAINER
 
 # Get steamcmd, unpack, and update
 mkdir $MOUNTPOINT$STEAM
 wget -qO- $URL | tar xvzf - -C $MOUNTPOINT$STEAM
-buildah run $CONTAINER -- sh -c "$STEAM/steamcmd.sh +login anonymous validate +exit"
 chmod -R 700 $MOUNTPOINT/home/steam
 chown -R 1000:1000 $MOUNTPOINT/home/steam
+buildah run $CONTAINER -- sh -c "$STEAM/steamcmd.sh +login anonymous validate +exit"
 buildah unmount $CONTAINER
 
-buildah commit --squash $CONTAINER steamcmd 
+buildah commit --squash $CONTAINER docker.io/emsoucy/steamcmd 
