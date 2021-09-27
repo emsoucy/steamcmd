@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -o errexit
 
 # Vars
@@ -11,7 +11,7 @@ OS=$(egrep '^NAME' /etc/os-release | cut -d '=' -f2)
 VER=$(egrep '^VERSION_ID' /etc/os-release | cut -d '=' -f2)
 
 # Install dependencies
-if [ $OS = 'Fedora' ]; then
+if [[ $OS =~ 'Fedora' ]]; then
   dnf install -y --installroot $MOUNTPOINT --releasever $VER coreutils glibc.i686 libstdc++.i686 --nodocs --setopt install_weak_deps=False
   dnf clean all -y --installroot $MOUNTPOINT --releasever $VER
 else
