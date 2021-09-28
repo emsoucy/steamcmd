@@ -7,16 +7,15 @@ MOUNTPOINT=$(buildah mount $CONTAINER)
 
 URL='https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz'
 STEAM=/home/steam/steamcmd
-OS=$(egrep '^NAME' /etc/os-release | cut -d '=' -f2)
 VER=$(egrep '^VERSION_ID' /etc/os-release | cut -d '=' -f2)
 
 # Install dependencies
-if [[ $OS =~ 'Fedora' ]]; then
+if command -v 'dnf' &> /dev/null; then
   dnf install -y --installroot $MOUNTPOINT --releasever $VER coreutils\
     glibc.i686 libstdc++.i686 --nodocs --setopt install_weak_deps=False
   dnf clean all -y --installroot $MOUNTPOINT --releasever $VER
 else
-  echo "Unsupported OS. Exiting"; exit
+  echo "Build script requires dnf package manager. Exiting."; exit
 fi
 
 # Create steam user
