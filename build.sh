@@ -11,8 +11,8 @@ VER=$(egrep '^VERSION_ID' /etc/os-release | cut -d '=' -f2)
 
 # Install dependencies
 if command -v 'dnf' &> /dev/null; then
-  dnf install -y --installroot $MOUNTPOINT --releasever $VER\
-    SDL2.i686 coreutils glibc-langpack-en glibc.i686 libstdc++.i686\
+  dnf install -y --installroot $MOUNTPOINT --releasever $VER \
+    SDL2.i686 SDL2.x86_64 coreutils glibc-langpack-en glibc.i686 libstdc++.i686 \
     --nodocs --refresh --setopt install_weak_deps=False
   dnf clean all -y --installroot $MOUNTPOINT --releasever $VER
 else
@@ -32,7 +32,7 @@ mkdir $MOUNTPOINT$STEAM
 wget -qO- $URL | tar xvzf - -C $MOUNTPOINT$STEAM
 chmod -R 700 $MOUNTPOINT/home/steam
 chown -R 1000:1000 $MOUNTPOINT/home/steam
-buildah run $CONTAINER -- sh\
+buildah run $CONTAINER -- sh \
   -c "$STEAM/steamcmd.sh +login anonymous validate +exit"
 
 buildah unmount $CONTAINER
