@@ -12,7 +12,7 @@ VER=$(egrep '^VERSION_ID' /etc/os-release | cut -d '=' -f2)
 # Install dependencies
 if command -v 'dnf' &> /dev/null; then
   dnf install -y --installroot $MOUNTPOINT --releasever $VER\
-    coreutils glibc-langpack-en glibc.i686 libstdc++.i686\
+    SDL2.i686 coreutils glibc-langpack-en glibc.i686 libstdc++.i686\
     --nodocs --refresh --setopt install_weak_deps=False
   dnf clean all -y --installroot $MOUNTPOINT --releasever $VER
 else
