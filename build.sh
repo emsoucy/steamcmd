@@ -10,13 +10,14 @@ STEAM=/home/steam/steamcmd
 VER=$(egrep '^VERSION_ID' /etc/os-release | cut -d '=' -f2)
 
 # Install dependencies
-if command -v 'dnf' &> /dev/null; then
+if [ $(command -v 'dnf') ]; then
   dnf install -y --installroot $MOUNTPOINT --releasever $VER \
-    SDL2.i686 SDL2.x86_64 coreutils glibc-langpack-en glibc.i686 libstdc++.i686 \
-    --nodocs --refresh --setopt install_weak_deps=False
-  dnf clean all -y --installroot $MOUNTPOINT --releasever $VER
+    SDL2.i686 SDL2.x86_64 coreutils glibc-langpack-en glibc.i686 \
+    libstdc++.i686 --nodocs --refresh --setopt install_weak_deps=False
+  rm -rf $MOUNTPOINT/var/cache/dnf
 else
-  echo "Build script requires dnf package manager. Exiting."; exit
+  echo "Build script requires dnf package manager. Exiting."
+  exit 1;
 fi
 
 # Create steam user
